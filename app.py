@@ -18,7 +18,7 @@ import pandas as pd # to load data from csv file (pip3 install pandas)
 # sign into zoom app
 def sign_into_zoom_app(input_zoom_meeting_id, input_zoom_meeting_pwd):
     # edge case: error "This meeting ID is not valid. Please check and try again." occurs sometimes when zoom app was minimized (not quit) hence it can have meeting ID cached. So quitting app at start will clear it
-    os.close
+    # figure out how to quit zoom app
 
     # open zoom app
     subprocess.call(["/usr/bin/open", "/Applications/zoom.us.app"])
@@ -65,14 +65,22 @@ def sign_into_zoom_app(input_zoom_meeting_id, input_zoom_meeting_pwd):
     pyautogui.write(input_zoom_meeting_pwd)
     time.sleep(0.5)
     pyautogui.press("enter") # enters the password
-    print("Entered meeting password: {} \n # JOINED MEETING {} #\n".format(input_zoom_meeting_pwd, input_zoom_meeting_id))
+    print("Entered meeting password: {} \n".format(input_zoom_meeting_pwd))
+    print("# JOINED MEETING {} #\n".format(input_zoom_meeting_id))
 
     # select join with computer audio prompt on joining the meeting
-    time.sleep(30) # edge case: if meeting is password protected then we don't know when host will admit us hence adding a default sleep time of 1 min before clicking on join with computer audio prompt
+    time.sleep(10) # edge case: if meeting is password protected then we don't know when host will admit us hence adding a default sleep time of 1 min before clicking on join with computer audio prompt
     select_computer_audio_button = pyautogui.locateCenterOnScreen("zoom_meeting_select_join_with_computer_audio_on_joining_meeting.png")
     pyautogui.moveTo(select_computer_audio_button)
     pyautogui.click()
 
+    """
+    # quit zoom meeting
+    time.sleep(10)
+    pyautogui.hotkey("ctrl", "w")
+    pyautogui.press("enter")
+    """
 
 if __name__ == "__main__":
-    sign_into_zoom_app("6507456272","cG5hYlN4dUg1Qk0xcEFMMHdJSk5ZQT09")
+    # sign_into_zoom_app("6507456272","cG5hYlN4dUg1Qk0xcEFMMHdJSk5ZQT09")
+    sign_into_zoom_app("9770788229","VGEyTjNKbGJUYzkxRHdSaDkwaTZhdz09")
