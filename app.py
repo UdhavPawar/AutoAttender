@@ -9,6 +9,7 @@
 import subprocess # to open zoom app
 import time # for timing between each step
 from datetime import datetime # for current date and time
+import os
 
 # user installed modules
 import pyautogui # to automate typing and mouse movements (pip3 install pyautogui)
@@ -16,18 +17,27 @@ import pandas as pd # to load data from csv file (pip3 install pandas)
 # pip3 install Pillow : required for pyautogui to open, locate and click center of image
 import progressbar # for animated loading bar while searching for scheduled meetings
 
+# quit zoom app
+def quit_zoom_app():
+    proc = subprocess.Popen("ps -ae | grep 'zoom' | grep -v 'grep' | awk '{print $1}'", shell=True, stdout=subprocess.PIPE) # grep for running zoom process and exclude the process of us grepping for zoom
+    pids = proc.communicate()[0]
+    for pid in pids.decode("UTF-8").split("\n"): # decode returned bytes from subprocess to string
+        if pid: # no empty space or 0 pid
+            process = subprocess.Popen("kill {}".format(pid), shell=True)
+
 # join zoom meeting
 def join_zoom_meeting(input_zoom_meeting_id, input_zoom_meeting_pwd):
     # edge case: error "This meeting ID is not valid. Please check and try again." occurs sometimes when zoom app was minimized (not quit) hence it can have meeting ID cached. So quitting app at start will clear it
-    # figure out how to quit zoom app
+    print("Quitting zoom app if already open\n")
+    quit_zoom_app()
 
     # open zoom app
     subprocess.call(["/usr/bin/open", "/Applications/zoom.us.app"])
-    print("Opened zoom app\n")
+    print("Opening zoom app\n")
 
     # wait for zoom app to load completely
-    time.sleep(3)
-    print("Waited 3 secs for zoom app to finish loading\n")
+    time.sleep(5)
+    print("Waited 5 secs for zoom app to finish loading\n")
 
     # select join a new zoom meeting option
     join_buttton = pyautogui.locateCenterOnScreen("zoom_join_meeting_homescreen_button.png")
@@ -69,22 +79,18 @@ def join_zoom_meeting(input_zoom_meeting_id, input_zoom_meeting_pwd):
     print("Entered meeting password: {} \n".format(input_zoom_meeting_pwd))
     # print("# JOINED MEETING {} #\n".format(input_zoom_meeting_id))
 
-    return "### JOINED MEETING {} ###\n".format(input_zoom_meeting_id)
-
-    """
-    # select join with computer audio prompt on joining the meeting
-    time.sleep(10) # edge case: if meeting is password protected then we don't know when host will admit us hence adding a default sleep time of 1 min before clicking on join with computer audio prompt
+    # select join with computer audio prompt after joining the meeting
+    time.sleep(10) # edge case: if meeting is password protected then we don't know when the host will admit us hence adding a default sleep time of 1 min before clicking on join with computer audio prompt
     select_computer_audio_button = pyautogui.locateCenterOnScreen("zoom_meeting_select_join_with_computer_audio_on_joining_meeting.png")
     pyautogui.moveTo(select_computer_audio_button)
     pyautogui.click()
 
+    return "### JOINED MEETING {} ###\n".format(input_zoom_meeting_id)
     
-    # quit zoom meeting
-    time.sleep(10)
-    pyautogui.hotkey("ctrl", "w")
-    pyautogui.press("enter")
     """
-
+    # quit zoom meeting
+    quit_zoom_app()
+    """
 
 # scheduler
 def meetings_scheduler():
@@ -124,8 +130,3 @@ if __name__ == "__main__":
 
 
 
-
-    """
-    join_zoom_meeting("6507456272","cG5hYlN4dUg1Qk0xcEFMMHdJSk5ZQT09")
-    # join_zoom_meeting("9770788229","VGEyTjNKbGJUYzkxRHdSaDkwaTZhdz09")
-    """
