@@ -81,7 +81,7 @@ def join_zoom_meeting(input_zoom_meeting_id, input_zoom_meeting_pwd):
 
     # select join with computer audio prompt after joining the meeting
     time.sleep(10) # edge case: if meeting is password protected then we don't know when the host will admit us hence adding a default sleep time of 1 min before clicking on join with computer audio prompt
-    select_computer_audio_button = pyautogui.locateCenterOnScreen("zoom_meeting_select_join_with_computer_audio_on_joining_meeting.png")
+    select_computer_audio_button = pyautogui.locateCenterOnScreen("zoom_meeting_select_join_with_computer_audio_after_joining_meeting.png")
     pyautogui.moveTo(select_computer_audio_button)
     pyautogui.click()
 
