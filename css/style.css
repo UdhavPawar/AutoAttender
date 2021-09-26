@@ -1540,7 +1540,7 @@ input.form-control {
   transition: line-height 0.35s ease-in-out;
 }
 .logo > img {
-  max-height: 56px;
+  max-height: 90px;
   width: auto;
 }
 @media (min-width: 992px) {
