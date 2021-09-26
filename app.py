@@ -36,8 +36,8 @@ def join_zoom_meeting(input_zoom_meeting_id, input_zoom_meeting_pwd):
     print("Opening zoom app\n")
 
     # wait for zoom app to load completely
-    time.sleep(5)
-    print("Waited 5 secs for zoom app to finish loading\n")
+    time.sleep(10)
+    print("Waited 10 secs for zoom app to finish loading\n")
 
     # select join a new zoom meeting option
     join_buttton = pyautogui.locateCenterOnScreen("zoom_join_meeting_homescreen_button.png")
