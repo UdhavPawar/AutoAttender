@@ -2,7 +2,7 @@
 # work to be done:
 1. look into auto installing non-deafult python modules: https://stackoverflow.com/questions/4527554/check-if-module-exists-if-not-install-it
 2. edge case: zoom app opens but account is logged out
-3. edge case: quit zoom app using subprocess at start of app
+3. fix email sender on site
 """
 
 # python default modules
@@ -123,7 +123,8 @@ def meetings_scheduler():
                     already_joined_a_meeting = False # this will leave the current meeting and start looking for other scheduled meetings
                     print("\n### Left meeting {} on {} ###\n".format(meeting_id, now))
                     print("\nLooking for scheduled meetings: \n")
-                
+
+        # update loading bar   
         else:
             time.sleep(0.1)
             if bar_counter > 3: # edge case: ValueError: Value out of range if we keep incrementing counter
@@ -134,6 +135,3 @@ def meetings_scheduler():
 
 if __name__ == "__main__":
     meetings_scheduler()
-
-
-
