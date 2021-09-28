@@ -86,11 +86,6 @@ def join_zoom_meeting(input_zoom_meeting_id, input_zoom_meeting_pwd):
     pyautogui.click()
 
     return "### JOINED MEETING {} ###\n".format(input_zoom_meeting_id)
-    
-    """
-    # quit zoom meeting
-    quit_zoom_app()
-    """
 
 # scheduler
 def meetings_scheduler():
@@ -108,15 +103,27 @@ def meetings_scheduler():
     while not already_joined_a_meeting:
         # checking if current time == meeting start time
         now = datetime.now().strftime("%H:%M")
-        if now in  str(data["meeting_start_time"]):
+        if now in str(data["meeting_start_time"]):
             # nagivate to that row using pandas loc in csv so other meeting details can be retrieved
             data_row = data.loc[data["meeting_start_time"] == now]
             # iloc is to iterate over a single row selected hence row will be 0
-            meeting_id = str(data_row.iloc[0,1]) # row 0 col 1
-            meeting_pwd = str(data_row.iloc[0,2]) # row 0 col 2
-            print("\n\n### Starting to join meeting: {}### \n".format(meeting_id))
+            meeting_end_time = str(data_row.iloc[0,1]) # row 0 col 1
+            meeting_id = str(data_row.iloc[0,2]) # row 0 col 2
+            meeting_pwd = str(data_row.iloc[0,3]) # row 0 col 3
+            print("\n\n### Starting to join meeting: {} ###\n".format(meeting_id))
             print(join_zoom_meeting(meeting_id, meeting_pwd))
             already_joined_a_meeting = True
+
+            # wait till meeting end time
+            print("Currently in meeting {} waiting for it to end".format(meeting_id))
+            while already_joined_a_meeting:
+                now = datetime.now().strftime("%H:%M")
+                if now in str(data["meeting_end_time"]):
+                    quit_zoom_app()
+                    already_joined_a_meeting = False # this will leave the current meeting and start looking for other scheduled meetings
+                    print("\n### Left meeting {} on {} ###\n".format(meeting_id, now))
+                    print("\nLooking for scheduled meetings: \n")
+                
         else:
             time.sleep(0.1)
             if bar_counter > 3: # edge case: ValueError: Value out of range if we keep incrementing counter
