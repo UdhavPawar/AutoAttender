@@ -141,7 +141,7 @@ class Application(tk.Frame):
         # now populate listbox
         self.populate_meetings_list()
         # log funtion output to outputs list
-        self.functions_output_list.insert(tk.END, "Added Meeting: {}".format(self.meeting_id_text.get()))
+        self.functions_output_list.insert(tk.END, "{} - Added Meeting: {}".format(datetime.now().strftime("%H:%M %p"), self.meeting_id_text.get()))
         # clear the entries
         self.clear_entries()
 
@@ -167,13 +167,13 @@ class Application(tk.Frame):
         db.delete(self.selected_meeting[0]) # pass primary index id to db delete function
         self.clear_entries()
         self.populate_meetings_list() # popolate meetings listbox after deletion
-        self.functions_output_list.insert(tk.END, "Deleted Meeting: {}".format(self.selected_meeting[1])) # log funtion output to outputs list
+        self.functions_output_list.insert(tk.END, "{} - Deleted Meeting: {}".format(datetime.now().strftime("%H:%M %p"), self.selected_meeting[1])) # log funtion output to outputs list
 
     def update_meeting(self):
         db.update(self.selected_meeting[0], self.meeting_id_text.get(), self.meeting_pwd_text.get(), self.meeting_start_time_text.get(), self.meeting_stop_time_text.get()) # pass primary key id and entries to update function
         self.clear_entries()
         self.populate_meetings_list()
-        self.functions_output_list.insert(tk.END, "Updated Meeting: {}".format(self.selected_meeting[1])) # log funtion output to outputs list
+        self.functions_output_list.insert(tk.END, "{} - Updated Meeting: {}".format(datetime.now().strftime("%H:%M %p"), self.selected_meeting[1])) # log funtion output to outputs list
 
     def clear_entries(self):
         self.meeting_id_entry.delete(0, tk.END)
@@ -276,12 +276,12 @@ class Application(tk.Frame):
         if self.start_stop_app_btn.config("relief")[-1] == "raised": # by default relief == raised so first button click will start the app
             self.start_stop_app_btn.config(relief = "sunken") # update relief so next button click will stop the app
             self.start_searching_for_meetings = True # set to True so meetings scheduler will start looking for meetings to join
-            self.functions_output_list.insert(tk.END, "Started App") # log funtion output to outputs list
+            self.functions_output_list.insert(tk.END, "{} - Started App".format(datetime.now().strftime("%H:%M %p"))) # log funtion output to outputs list
             self.meetings_scheduler()
         else:
             self.start_stop_app_btn.config(relief = "raised") # update relief so next button click will start the app
             self.start_searching_for_meetings = False # set to False so meetings scheduler will stop looking for meetings to join
-            self.functions_output_list.insert(tk.END, "Stopped App") # log funtion output to outputs list
+            self.functions_output_list.insert(tk.END, "{} - Stopped App".format(datetime.now().strftime("%H:%M %p"))) # log funtion output to outputs list
 
 if __name__ == "__main__":
     # Create window object
