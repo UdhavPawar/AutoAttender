@@ -31,7 +31,7 @@ class Application(tk.Frame):
         self.master = master
         master.title('Auto Attender')
         # Set app window's size
-        master.geometry("690x325")
+        master.geometry("690x500")
         # Setup widgets and grid
         self.create_widgets()
         # Initialize selected meeting variable
@@ -71,7 +71,9 @@ class Application(tk.Frame):
         self.meeting_stop_time_entry.grid(row=1, column=3)
 
         # Meetings List (ListBox) Widget
-        self.meetings_list = tk.Listbox(self.master, height=8, width=50, border=0) # border=0 will hide the border so that we don't see how many rows and cols the widget spans
+        # self.meetings_list_label = tk.Label(self.master, text="Meetings List")
+        # self.meetings_list_label.grid(row=3, column=0, sticky=tk.W)
+        self.meetings_list = tk.Listbox(self.master, height=8, width=50, border=1) # border=0 will hide the border so that we don't see how many rows and cols the widget spans
         self.meetings_list.grid(row=3, column=0, rowspan=6, columnspan=3, padx=20, pady=20) # row and col span is how many rows and col should respective span
 
         # Create scrollbar for meetings list
@@ -101,6 +103,23 @@ class Application(tk.Frame):
         self.start_stop_app_btn = tk.Button(self.master, text="Start / Stop App", width=12, relief="raised", command=self.start_stop_app) # relief property "sunken" or "raised" is used to toggle between app start and stop
         self.start_stop_app_btn.grid(row=2, column=3)
 
+        # Function outputs List (ListBox) Widget
+        # self.functions_output_list_label = tk.Label(self.master, text="Your Activity")
+        # self.functions_output_list_label.grid(row=8, column=0, sticky=tk.W)
+        self.functions_output_list = tk.Listbox(self.master, height=8, width=50, border=1) # border=0 will hide the border so that we don't see how many rows and cols the widget spans
+        self.functions_output_list.grid(row=9, column=0, rowspan=6, columnspan=3, padx=20, pady=10) # row and col span is how many rows and col should respective span
+
+        # Create scrollbar for meetings list
+        self.functions_output_list_scrollbar = tk.Scrollbar(self.master)
+        self.functions_output_list_scrollbar.grid(row=9, column=3) # column is 3 as listbox spans for 3 cols so putting scrollbar next to listbox
+
+        # Connect scrollbar to meetings listbox
+        self.functions_output_list.configure(yscrollcommand=self.functions_output_list_scrollbar.set) # yscroll as we want to scroll vertically along y axis
+        self.functions_output_list_scrollbar.configure(command=self.functions_output_list.yview) # configure scrollbar to scroll along the y axis
+
+        # Connect meeting selected in listbox to select_meeting function
+        self.functions_output_list.bind("<<ListboxSelect>>")
+
     # Populate meetings from db into tkinter meetings listbox
     def populate_meetings_list(self):
         # edge case: we don't want duplicate items / twice population of meeting details hence we clear all at start of new population
@@ -119,10 +138,12 @@ class Application(tk.Frame):
         self.meetings_list.delete(0, tk.END)
         # insert into listbox
         self.meetings_list.insert(tk.END, (self.meeting_id_text.get(), self.meeting_pwd_text.get(), self.meeting_start_time_text.get(), self.meeting_stop_time_text.get()))
-        # clear the entries
-        self.clear_entries()
         # now populate listbox
         self.populate_meetings_list()
+        # log funtion output to outputs list
+        self.functions_output_list.insert(tk.END, "Added Meeting: {}".format(self.meeting_id_text.get()))
+        # clear the entries
+        self.clear_entries()
 
     def select_meeting(self, event):
         try:
@@ -146,11 +167,13 @@ class Application(tk.Frame):
         db.delete(self.selected_meeting[0]) # pass primary index id to db delete function
         self.clear_entries()
         self.populate_meetings_list() # popolate meetings listbox after deletion
+        self.functions_output_list.insert(tk.END, "Deleted Meeting: {}".format(self.selected_meeting[1])) # log funtion output to outputs list
 
     def update_meeting(self):
         db.update(self.selected_meeting[0], self.meeting_id_text.get(), self.meeting_pwd_text.get(), self.meeting_start_time_text.get(), self.meeting_stop_time_text.get()) # pass primary key id and entries to update function
         self.clear_entries()
         self.populate_meetings_list()
+        self.functions_output_list.insert(tk.END, "Updated Meeting: {}".format(self.selected_meeting[1])) # log funtion output to outputs list
 
     def clear_entries(self):
         self.meeting_id_entry.delete(0, tk.END)
@@ -253,12 +276,12 @@ class Application(tk.Frame):
         if self.start_stop_app_btn.config("relief")[-1] == "raised": # by default relief == raised so first button click will start the app
             self.start_stop_app_btn.config(relief = "sunken") # update relief so next button click will stop the app
             self.start_searching_for_meetings = True # set to True so meetings scheduler will start looking for meetings to join
+            self.functions_output_list.insert(tk.END, "Started App") # log funtion output to outputs list
             self.meetings_scheduler()
-            print("Start App")
         else:
             self.start_stop_app_btn.config(relief = "raised") # update relief so next button click will start the app
             self.start_searching_for_meetings = False # set to False so meetings scheduler will stop looking for meetings to join
-            print("Stop App")
+            self.functions_output_list.insert(tk.END, "Stopped App") # log funtion output to outputs list
 
 if __name__ == "__main__":
     # Create window object
