@@ -31,7 +31,7 @@ class Application(tk.Frame):
         self.master = master
         master.title('Auto Attender')
         # Set app window's size
-        master.geometry("700x350")
+        master.geometry("690x325")
         # Setup widgets and grid
         self.create_widgets()
         # Initialize selected meeting variable
