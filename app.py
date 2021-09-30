@@ -31,7 +31,13 @@ class Application(tk.Frame):
         self.master = master
         master.title('Auto Attender')
         # Set app window's size
-        master.geometry("690x500")
+        master.geometry("600x800")
+        # Hide the root window drag bar and close button
+        # master.overrideredirect(True)
+        # Make the window content area transparent
+        master.wm_attributes("-transparent", True)
+        # Set the root window background color to a transparent color
+        master.config(bg='systemTransparent')
         # Setup widgets and grid
         self.create_widgets()
         # Initialize selected meeting variable
@@ -42,6 +48,14 @@ class Application(tk.Frame):
         self.start_searching_for_meetings = False
 
     def create_widgets(self):
+        # NOTE: all the x and y co-ordinates are set according to Figma design and are found by cliking on each component (like button, input fields, list boxes, etc)
+        # Set app background image
+        self.background_image = tk.PhotoImage(file = "./figma/background.png")
+        self.background_image_label = tk.Label(self.master, image=self.background_image)
+        self.background_image_label.photo = self.background_image
+        self.background_image_label.place(x=0, y=0, relwidth=1, relheight=1) # x and y are frame co-ordinates and relwidth relheight is for no extra spacing at those co-ordinates
+
+        """
         # Meeting Id
         self.meeting_id_text = tk.StringVar() # var to store meeting id
         self.meeting_id_label = tk.Label(self.master, text="Meeting ID", font=("bold", 14), pady=20) # create a meeting id label. pady is for padding for y axis ie. from top of window
@@ -86,23 +100,35 @@ class Application(tk.Frame):
 
         # Connect meeting selected in listbox to select_meeting function
         self.meetings_list.bind("<<ListboxSelect>>", self.select_meeting)
+        """
 
         # Add Meeting Button
-        self.add_meeting_btn = tk.Button(self.master, text="Add Meeting", width=12, command=self.add_meeting)
-        self.add_meeting_btn.grid(row=2, column=0, pady=20) # just like labels we only need to add y axis padding for first button rest of buttons will align themselves by rows and cols
+        # self.add_meeting_btn = tk.Button(self.master, text="Add Meeting", width=12, command=self.add_meeting)
+        # self.add_meeting_btn.grid(row=2, column=0, pady=20)
+        self.button_background = tk.PhotoImage(file = "./figma/transparent.png")
+        self.add_meeting_btn = tk.Button(self.master, image=self.button_background, width=12, command=self.add_meeting)
+        self.add_meeting_btn.pack()
+        self.add_meeting_btn.place(x=27, y=309.59, height=66.31, width=113.4)
+        # self.add_meeting_btn.pack()
 
+        """
         # Delete Meeting Button
         self.delete_meeting_btn = tk.Button(self.master, text="Delete Meeting", width=12, command=self.delete_meeting)
-        self.delete_meeting_btn.grid(row=2, column=1) 
+        # self.delete_meeting_btn.grid(row=2, column=1)
+        self.delete_meeting_btn.place(x=171, y=309.59, height=66.31, width=113.4)
 
         # Update Meeting Button
         self.update_meeting_btn = tk.Button(self.master, text="Update Meeting", width=12, command=self.update_meeting)
-        self.update_meeting_btn.grid(row=2, column=2) 
+        # self.update_meeting_btn.grid(row=2, column=2)
+        self.update_meeting_btn.place(x=315, y=309.59, height=66.31, width=113.4)
 
         # Start / Stop App Button
         self.start_stop_app_btn = tk.Button(self.master, text="Start / Stop App", width=12, relief="raised", command=self.start_stop_app) # relief property "sunken" or "raised" is used to toggle between app start and stop
-        self.start_stop_app_btn.grid(row=2, column=3)
+        # self.start_stop_app_btn.grid(row=2, column=3)
+        self.start_stop_app_btn.place(x=459, y=309.59, height=66.31, width=113.4)
+        """
 
+        """
         # Function outputs List (ListBox) Widget
         # self.functions_output_list_label = tk.Label(self.master, text="Your Activity")
         # self.functions_output_list_label.grid(row=8, column=0, sticky=tk.W)
@@ -119,17 +145,24 @@ class Application(tk.Frame):
 
         # Connect meeting selected in listbox to select_meeting function
         self.functions_output_list.bind("<<ListboxSelect>>")
+        """
 
     # Populate meetings from db into tkinter meetings listbox
     def populate_meetings_list(self):
+        print("Populate")
+        """
         # edge case: we don't want duplicate items / twice population of meeting details hence we clear all at start of new population
         self.meetings_list.delete(0, tk.END) # delete from start to end / current pointer
         for row in db.fetch():
             self.meetings_list.insert(tk.END, row) # insert each row at end of listbox pointer
+        """
 
     def add_meeting(self):
-        # using tkinter messagebox to make sure any of required input fields is not empty
-        if self.meeting_id_text.get() == "" or self.meeting_pwd_text.get() == "" or self.meeting_start_time_text.get() == "" or self.meeting_stop_time_text.get() == "":
+        print("Add")
+        """
+        # using tkinter messagebox to make sure any of required input fields (meeting ID, meeting start time and meeting stop time) is not empty
+        # note: empty meeting pwd is accepted as some meetings don't have a pwd
+        if self.meeting_id_text.get() == "" or self.meeting_start_time_text.get() == "" or self.meeting_stop_time_text.get() == "":
             messagebox.showerror("Required Fields", "Please input all fields")
             return
         # get entered text from the defined vars and insert into db
@@ -144,8 +177,11 @@ class Application(tk.Frame):
         self.functions_output_list.insert(tk.END, "{} - Added Meeting: {}".format(datetime.now().strftime("%H:%M %p"), self.meeting_id_text.get()))
         # clear the entries
         self.clear_entries()
+        """
 
     def select_meeting(self, event):
+        print("Select meeting")
+        """
         try:
             meeting_index = self.meetings_list.curselection()[0] # get index of selected meeting
             self.selected_meeting = self.meetings_list.get(meeting_index) # get all data of selected meeting
@@ -162,24 +198,34 @@ class Application(tk.Frame):
             self.meeting_stop_time_entry.insert(tk.END, self.selected_meeting[4])
         except IndexError:
             pass
+        """
 
     def delete_meeting(self):
+        print("Delete meeting")
+        """
         db.delete(self.selected_meeting[0]) # pass primary index id to db delete function
         self.clear_entries()
         self.populate_meetings_list() # popolate meetings listbox after deletion
         self.functions_output_list.insert(tk.END, "{} - Deleted Meeting: {}".format(datetime.now().strftime("%H:%M %p"), self.selected_meeting[1])) # log funtion output to outputs list
+        """
 
     def update_meeting(self):
+        print("Update meeting")
+        """
         db.update(self.selected_meeting[0], self.meeting_id_text.get(), self.meeting_pwd_text.get(), self.meeting_start_time_text.get(), self.meeting_stop_time_text.get()) # pass primary key id and entries to update function
         self.clear_entries()
         self.populate_meetings_list()
         self.functions_output_list.insert(tk.END, "{} - Updated Meeting: {}".format(datetime.now().strftime("%H:%M %p"), self.selected_meeting[1])) # log funtion output to outputs list
+        """
 
     def clear_entries(self):
+        print("Clear entries")
+        """
         self.meeting_id_entry.delete(0, tk.END)
         self.meeting_pwd_entry.delete(0, tk.END)
         self.meeting_start_time_entry.delete(0,tk.END)
         self.meeting_stop_time_entry.delete(0, tk.END)
+        """
 
     # quit zoom app
     def quit_zoom_app(self):
@@ -275,13 +321,19 @@ class Application(tk.Frame):
     def start_stop_app(self):
         if self.start_stop_app_btn.config("relief")[-1] == "raised": # by default relief == raised so first button click will start the app
             self.start_stop_app_btn.config(relief = "sunken") # update relief so next button click will stop the app
+            print("Start App")
+            """
             self.start_searching_for_meetings = True # set to True so meetings scheduler will start looking for meetings to join
             self.functions_output_list.insert(tk.END, "{} - Started App".format(datetime.now().strftime("%H:%M %p"))) # log funtion output to outputs list
             self.meetings_scheduler()
+            """
         else:
             self.start_stop_app_btn.config(relief = "raised") # update relief so next button click will start the app
+            print("Stop App")
+            """
             self.start_searching_for_meetings = False # set to False so meetings scheduler will stop looking for meetings to join
             self.functions_output_list.insert(tk.END, "{} - Stopped App".format(datetime.now().strftime("%H:%M %p"))) # log funtion output to outputs list
+            """
 
 if __name__ == "__main__":
     # Create window object
