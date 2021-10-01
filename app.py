@@ -12,6 +12,7 @@ import time # for timing between each step
 from datetime import datetime # for current date and time
 import os
 import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox # used for tkinter user input validation
 # from itertools import cycle # to toggle betweem start stop app
 from db import Database
@@ -21,6 +22,7 @@ import pyautogui # to automate typing and mouse movements (pip3 install pyautogu
 import pandas as pd # to load data from csv file (pip3 install pandas)
 # pip3 install Pillow : required for pyautogui to open, locate and click center of image
 import progressbar # for animated loading bar while searching for scheduled meetings
+from tkmacosx import Button
 
 # Initialize db
 db = Database("meetings.db")
@@ -32,12 +34,6 @@ class Application(tk.Frame):
         master.title('Auto Attender')
         # Set app window's size
         master.geometry("600x800")
-        # Hide the root window drag bar and close button
-        # master.overrideredirect(True)
-        # Make the window content area transparent
-        master.wm_attributes("-transparent", True)
-        # Set the root window background color to a transparent color
-        master.config(bg='systemTransparent')
         # Setup widgets and grid
         self.create_widgets()
         # Initialize selected meeting variable
@@ -54,6 +50,7 @@ class Application(tk.Frame):
         self.background_image_label = tk.Label(self.master, image=self.background_image)
         self.background_image_label.photo = self.background_image
         self.background_image_label.place(x=0, y=0, relwidth=1, relheight=1) # x and y are frame co-ordinates and relwidth relheight is for no extra spacing at those co-ordinates
+        
 
         """
         # Meeting Id
@@ -103,30 +100,29 @@ class Application(tk.Frame):
         """
 
         # Add Meeting Button
-        # self.add_meeting_btn = tk.Button(self.master, text="Add Meeting", width=12, command=self.add_meeting)
-        # self.add_meeting_btn.grid(row=2, column=0, pady=20)
-        self.button_background = tk.PhotoImage(file = "./figma/transparent.png")
-        self.add_meeting_btn = tk.Button(self.master, image=self.button_background, width=12, command=self.add_meeting)
-        self.add_meeting_btn.pack()
-        self.add_meeting_btn.place(x=27, y=309.59, height=66.31, width=113.4)
+        self.add_meeting_btn_background = tk.PhotoImage(file = "./figma/add_meeting_icon.png")
+        self.add_meeting_btn = Button(self.master, image=self.add_meeting_btn_background, bg='black', bordercolor='black', highlightcolor='black', focuscolor='black', highlightthickness = 0, borderwidth = 0, activebackground='#9800de', justify="center", command=self.add_meeting)
         # self.add_meeting_btn.pack()
+        # print(self.add_meeting_btn.keys())
+        self.add_meeting_btn.place(x=27, y=290, height=90, width=113.4)
 
-        """
         # Delete Meeting Button
-        self.delete_meeting_btn = tk.Button(self.master, text="Delete Meeting", width=12, command=self.delete_meeting)
-        # self.delete_meeting_btn.grid(row=2, column=1)
-        self.delete_meeting_btn.place(x=171, y=309.59, height=66.31, width=113.4)
+        self.delete_meeting_btn_background = tk.PhotoImage(file = "./figma/delete_meeting_icon.png")
+        self.delete_meeting_btn = Button(self.master, image=self.delete_meeting_btn_background, bg='black', bordercolor='black', highlightcolor='black', focuscolor='black', highlightthickness = 0, borderwidth = 0, activebackground='#9800de', justify="center", command=self.delete_meeting)
+        # self.add_meeting_btn.pack()
+        self.delete_meeting_btn.place(x=171, y=290, height=90, width=113.4)
 
         # Update Meeting Button
-        self.update_meeting_btn = tk.Button(self.master, text="Update Meeting", width=12, command=self.update_meeting)
-        # self.update_meeting_btn.grid(row=2, column=2)
-        self.update_meeting_btn.place(x=315, y=309.59, height=66.31, width=113.4)
+        self.update_meeting_btn_background = tk.PhotoImage(file = "./figma/update_meeting_icon.png")
+        self.update_meeting_btn = Button(self.master, image=self.update_meeting_btn_background, bg='black', bordercolor='black', highlightcolor='black', focuscolor='black', highlightthickness = 0, borderwidth = 0, activebackground='#9800de', justify="center", command=self.update_meeting)
+        # self.add_meeting_btn.pack()
+        self.update_meeting_btn.place(x=315, y=290, height=90, width=113.4)
 
         # Start / Stop App Button
-        self.start_stop_app_btn = tk.Button(self.master, text="Start / Stop App", width=12, relief="raised", command=self.start_stop_app) # relief property "sunken" or "raised" is used to toggle between app start and stop
-        # self.start_stop_app_btn.grid(row=2, column=3)
-        self.start_stop_app_btn.place(x=459, y=309.59, height=66.31, width=113.4)
-        """
+        self.start_stop_app_btn_background = tk.PhotoImage(file = "./figma/start_stop_app_icon.png")
+        self.start_stop_app_btn = Button(self.master, image=self.start_stop_app_btn_background, bg='black', bordercolor='black', highlightcolor='black', focuscolor='black', highlightthickness = 0, borderwidth = 0, activebackground='#9800de', justify="center", relief="raised", command=self.start_stop_app) # relief property "sunken" or "raised" is used to toggle between app start and stop
+        # self.add_meeting_btn.pack()
+        self.start_stop_app_btn.place(x=459, y=290, height=90, width=113.4)
 
         """
         # Function outputs List (ListBox) Widget
@@ -319,7 +315,7 @@ class Application(tk.Frame):
                 self.after(15000, self.meetings_scheduler) # schedule to run every 15 seconds
 
     def start_stop_app(self):
-        if self.start_stop_app_btn.config("relief")[-1] == "raised": # by default relief == raised so first button click will start the app
+        if self.start_stop_app_btn.config()["relief"][-1] == "raised": # by default relief == raised so first button click will start the app
             self.start_stop_app_btn.config(relief = "sunken") # update relief so next button click will stop the app
             print("Start App")
             """
