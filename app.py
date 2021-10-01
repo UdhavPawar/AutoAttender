@@ -51,36 +51,39 @@ class Application(tk.Frame):
         self.background_image_label.photo = self.background_image
         self.background_image_label.place(x=0, y=0, relwidth=1, relheight=1) # x and y are frame co-ordinates and relwidth relheight is for no extra spacing at those co-ordinates
         
-
-        """
         # Meeting Id
         self.meeting_id_text = tk.StringVar() # var to store meeting id
-        self.meeting_id_label = tk.Label(self.master, text="Meeting ID", font=("bold", 14), pady=20) # create a meeting id label. pady is for padding for y axis ie. from top of window
-        self.meeting_id_label.grid(row=0, column=0, sticky=tk.W) # put meeting id label on grid. sticky property is to align lable to left hence W (West)
-        self.meeting_id_entry = tk.Entry(self.master, textvariable=self.meeting_id_text) # feed entered value to sting var
-        self.meeting_id_entry.grid(row=0, column=1)
+        self.meeting_id_text.set("Meeting Id") # default entry box text
+        self.meeting_id_entry = tk.Entry(self.master, textvariable=self.meeting_id_text, background="#262626", fg="#9800de", borderwidth=0, font=("Tahoma", 18), justify="center", insertborderwidth=1, highlightthickness=1, highlightcolor="#9800de") # feed entered value to sting var
+        self.meeting_id_entry.bind("<Button-1>", self.clear_entry_on_click) # clear default entry box text for user to type in
+        self.meeting_id_entry.pack()
+        self.meeting_id_entry.place(x= 74, y=169, width=198, height=39)
 
         # Meeting Pwd
-        self.meeting_pwd_text = tk.StringVar() # var to store meeting pwd
-        self.meeting_pwd_label = tk.Label(self.master, text="Meeting Password", font=("bold", 14)) # note: we don't need padding anymore as rest of labels will be already pushed down from previous one
-        self.meeting_pwd_label.grid(row=0, column=2, sticky=tk.W) 
-        self.meeting_pwd_entry = tk.Entry(self.master, textvariable=self.meeting_pwd_text) 
-        self.meeting_pwd_entry.grid(row=0, column=3)
+        self.meeting_pwd_text = tk.StringVar() # var to store meeting id
+        self.meeting_pwd_text.set("Meeting Password") # default entry box text
+        self.meeting_pwd_entry = tk.Entry(self.master, textvariable=self.meeting_pwd_text, background="#262626", fg="#9800de", borderwidth=0, font=("Tahoma", 18), justify="center", insertborderwidth=1, highlightthickness=1, highlightcolor="#9800de") # feed entered value to sting var
+        self.meeting_pwd_entry.bind("<Button-1>", self.clear_entry_on_click) # clear default entry box text for user to type in
+        self.meeting_pwd_entry.pack()
+        self.meeting_pwd_entry.place(x= 328, y=169, width=198, height=39)
 
         # Meeting Start Time
-        self.meeting_start_time_text = tk.StringVar() # var to store meeting start time
-        self.meeting_start_time_label = tk.Label(self.master, text="Meeting Start Time", font=("bold", 14)) 
-        self.meeting_start_time_label.grid(row=1, column=0, sticky=tk.W) 
-        self.meeting_start_time_entry = tk.Entry(self.master, textvariable=self.meeting_start_time_text) 
-        self.meeting_start_time_entry.grid(row=1, column=1)
+        self.meeting_start_time_text = tk.StringVar() # var to store meeting id
+        self.meeting_start_time_text.set("Start Time (HH:MM)") # default entry box text
+        self.meeting_start_time_entry = tk.Entry(self.master, textvariable=self.meeting_start_time_text, background="#262626", fg="#9800de", borderwidth=0, font=("Tahoma", 18), justify="center", insertborderwidth=1, highlightthickness=1, highlightcolor="#9800de") # feed entered value to sting var
+        self.meeting_start_time_entry.bind("<Button-1>", self.clear_entry_on_click) # clear default entry box text for user to type in
+        self.meeting_start_time_entry.pack()
+        self.meeting_start_time_entry.place(x= 74, y=228, width=198, height=39)
 
         # Meeting Stop Time
-        self.meeting_stop_time_text = tk.StringVar() # var to store meeting start time
-        self.meeting_stop_time_label = tk.Label(self.master, text="Meeting Stop Time", font=("bold", 14)) 
-        self.meeting_stop_time_label.grid(row=1, column=2, sticky=tk.W) 
-        self.meeting_stop_time_entry = tk.Entry(self.master, textvariable=self.meeting_stop_time_text) 
-        self.meeting_stop_time_entry.grid(row=1, column=3)
+        self.meeting_stop_time_text = tk.StringVar() # var to store meeting id
+        self.meeting_stop_time_text.set("Stop Time (HH:MM)") # default entry box text
+        self.meeting_stop_time_entry = tk.Entry(self.master, textvariable=self.meeting_stop_time_text, background="#262626", fg="#9800de", borderwidth=0, font=("Tahoma", 18), justify="center", insertborderwidth=1, highlightthickness=1, highlightcolor="#9800de") # feed entered value to sting var
+        self.meeting_stop_time_entry.bind("<Button-1>", self.clear_entry_on_click) # clear default entry box text for user to type in
+        self.meeting_stop_time_entry.pack()
+        self.meeting_stop_time_entry.place(x= 328, y=228, width=198, height=39)
 
+        """
         # Meetings List (ListBox) Widget
         # self.meetings_list_label = tk.Label(self.master, text="Meetings List")
         # self.meetings_list_label.grid(row=3, column=0, sticky=tk.W)
@@ -101,27 +104,22 @@ class Application(tk.Frame):
 
         # Add Meeting Button
         self.add_meeting_btn_background = tk.PhotoImage(file = "./figma/add_meeting_icon.png")
-        self.add_meeting_btn = Button(self.master, image=self.add_meeting_btn_background, bg='black', bordercolor='black', highlightcolor='black', focuscolor='black', highlightthickness = 0, borderwidth = 0, activebackground='#9800de', justify="center", command=self.add_meeting)
-        # self.add_meeting_btn.pack()
-        # print(self.add_meeting_btn.keys())
+        self.add_meeting_btn = Button(self.master, image=self.add_meeting_btn_background, bg='black', bordercolor='black', highlightcolor='black', focuscolor='black', highlightthickness = 0, borderwidth = 0, activebackground='#9800de', justify="center", disabledbackground="black", command=self.add_meeting)
         self.add_meeting_btn.place(x=27, y=290, height=90, width=113.4)
 
         # Delete Meeting Button
         self.delete_meeting_btn_background = tk.PhotoImage(file = "./figma/delete_meeting_icon.png")
         self.delete_meeting_btn = Button(self.master, image=self.delete_meeting_btn_background, bg='black', bordercolor='black', highlightcolor='black', focuscolor='black', highlightthickness = 0, borderwidth = 0, activebackground='#9800de', justify="center", command=self.delete_meeting)
-        # self.add_meeting_btn.pack()
         self.delete_meeting_btn.place(x=171, y=290, height=90, width=113.4)
 
         # Update Meeting Button
         self.update_meeting_btn_background = tk.PhotoImage(file = "./figma/update_meeting_icon.png")
         self.update_meeting_btn = Button(self.master, image=self.update_meeting_btn_background, bg='black', bordercolor='black', highlightcolor='black', focuscolor='black', highlightthickness = 0, borderwidth = 0, activebackground='#9800de', justify="center", command=self.update_meeting)
-        # self.add_meeting_btn.pack()
         self.update_meeting_btn.place(x=315, y=290, height=90, width=113.4)
 
         # Start / Stop App Button
         self.start_stop_app_btn_background = tk.PhotoImage(file = "./figma/start_stop_app_icon.png")
         self.start_stop_app_btn = Button(self.master, image=self.start_stop_app_btn_background, bg='black', bordercolor='black', highlightcolor='black', focuscolor='black', highlightthickness = 0, borderwidth = 0, activebackground='#9800de', justify="center", relief="raised", command=self.start_stop_app) # relief property "sunken" or "raised" is used to toggle between app start and stop
-        # self.add_meeting_btn.pack()
         self.start_stop_app_btn.place(x=459, y=290, height=90, width=113.4)
 
         """
@@ -152,6 +150,9 @@ class Application(tk.Frame):
         for row in db.fetch():
             self.meetings_list.insert(tk.END, row) # insert each row at end of listbox pointer
         """
+
+    def clear_entry_on_click(self, event):
+        event.widget.delete(0, tk.END)
 
     def add_meeting(self):
         print("Add")
@@ -216,8 +217,8 @@ class Application(tk.Frame):
 
     def clear_entries(self):
         print("Clear entries")
-        """
         self.meeting_id_entry.delete(0, tk.END)
+        """
         self.meeting_pwd_entry.delete(0, tk.END)
         self.meeting_start_time_entry.delete(0,tk.END)
         self.meeting_stop_time_entry.delete(0, tk.END)
